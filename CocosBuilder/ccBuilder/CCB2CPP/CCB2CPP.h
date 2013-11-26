@@ -3,7 +3,7 @@
 //  CocosBuilder
 //
 //  Created by yanbin on 13-11-14.
-//
+//  http://www.mobile-mafia.com
 //
 
 #import <Foundation/Foundation.h>
