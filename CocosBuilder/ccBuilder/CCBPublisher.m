@@ -40,6 +40,7 @@
 #import "CCBDirectoryComparer.h"
 #import "ResourceManager.h"
 #import "ResourceManagerUtil.h"
+#import "CCB2CPP.h"
 
 @implementation CCBPublisher
 
@@ -138,6 +139,10 @@
     
     // Load src file
     NSMutableDictionary* doc = [NSMutableDictionary dictionaryWithContentsOfFile:srcFile];
+    
+    // Generate cpp/header files
+    [CCB2CPP convertFromDictionaryDoc:doc from:srcFile to:dstFile];
+    
     if (!doc)
     {
         [warnings addWarningWithDescription:[NSString stringWithFormat:@"Failed to publish ccb-file. File is in invalid format: %@",srcFile] isFatal:NO];
