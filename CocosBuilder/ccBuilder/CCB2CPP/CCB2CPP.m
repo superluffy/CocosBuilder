@@ -18,7 +18,9 @@
     NSDictionary* nodeGraph = [doc objectForKey:@"nodeGraph"];
     NSString* baseClass = [nodeGraph objectForKey:@"baseClass"];
     NSString* customClass = [nodeGraph objectForKey:@"customClass"];
+    NSString* jsController = [nodeGraph objectForKey:@"jsController"];
     NSString* className = NULL;
+
     NSString* ccbname = [[srcFile componentsSeparatedByString:@"/"] lastObject];
     NSString* outputPath = [toFile substringToIndex:[toFile rangeOfString:@"/" options:NSBackwardsSearch].location];
     outputPath = [outputPath stringByAppendingString:@"/cpp/"];
@@ -59,7 +61,10 @@
                              @"classname":className,
                              @"menuitem_callbacks":menuitem_callbacks,
                              @"ccbname":ccbname,
-                             @"baseclass":baseClass
+                             @"baseclass":baseClass,
+                             @"jsController":jsController,
+                             @"baseclassTrim":[baseClass substringFromIndex:2],
+                             @"baseclassTrimLower":[[baseClass substringFromIndex:2] lowercaseString]
                              };
     
     NSLog(@"%@",[params description]);
@@ -73,7 +78,6 @@
     filemgr = [[NSFileManager alloc] init];
     
     currentpath = [filemgr currentDirectoryPath];
-
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
                                                          NSUserDomainMask, YES);
@@ -100,6 +104,15 @@
     NSString *cppFileContents = [GRMustacheTemplate renderObject:params fromString:template_cppFileContents error:NULL];
     outfpath = [[NSString alloc ] initWithFormat:@"%@%@%@", outputPath, className, @".cpp" ];
     [cppFileContents writeToFile:outfpath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    
+    NSString *template_luaFileContents = [[[NSString alloc] initWithContentsOfFile:[documentsDirectory stringByAppendingPathComponent:@"ccb2cpp/template.lua.tpl"]
+                                                                      usedEncoding:&encoding
+                                                                             error:&error]
+                                          autorelease];
+    NSString *luaFileContents = [GRMustacheTemplate renderObject:params fromString:template_luaFileContents error:NULL];
+    outfpath = [[NSString alloc ] initWithFormat:@"%@%@%@", outputPath, jsController, @".lua" ];
+    [luaFileContents writeToFile:outfpath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    
 }
 
 
