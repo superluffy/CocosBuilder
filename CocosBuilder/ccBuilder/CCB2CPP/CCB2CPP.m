@@ -19,6 +19,9 @@
     NSString* baseClass = [nodeGraph objectForKey:@"baseClass"];
     NSString* customClass = [nodeGraph objectForKey:@"customClass"];
     NSString* jsController = [nodeGraph objectForKey:@"jsController"];
+    if (jsController == NULL) {
+        jsController = @"";
+    }
     NSString* className = NULL;
 
     NSString* ccbname = [[srcFile componentsSeparatedByString:@"/"] lastObject];
