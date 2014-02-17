@@ -12,7 +12,6 @@
 @implementation CCB2CPP
 
 
-
 + (void) convertFromDictionaryDoc:(NSDictionary*)doc from:(NSString*)srcFile to:(NSString*)toFile
 {
     NSDictionary* nodeGraph = [doc objectForKey:@"nodeGraph"];
