@@ -39,10 +39,11 @@
     [CCB2CPP writeNodeGraph:nodeGraph toArray:objectsArr];
 
     
-    NSLog(@"%@",[objectsArr description]);
+    NSLog(@"%@",[doc description]);
 
     NSMutableArray* variables = [[[NSMutableArray alloc] initWithCapacity:0] autorelease];
     NSMutableArray* menuitem_callbacks = [[[NSMutableArray alloc] initWithCapacity:0] autorelease];
+    NSMutableArray* controlbutton_callbacks = [[[NSMutableArray alloc] initWithCapacity:0] autorelease];
     
     for (NSDictionary *dict in objectsArr) {
         if ([dict objectForKey:@"memberVarAssignmentName"] != nil &&
@@ -55,13 +56,18 @@
             [[dict objectForKey:@"callback"] length] > 0) {
             [menuitem_callbacks addObject:@{@"callback": [dict objectForKey:@"callback"]}];
         }
-        
+        if ([dict objectForKey:@"cccontrol_callback"] != nil &&
+           [[dict objectForKey:@"cccontrol_callback"] length] > 0) {
+            [controlbutton_callbacks addObject:@{@"callback": [dict objectForKey:@"cccontrol_callback"]}];
+        }
+        NSLog(@"%@",[dict description]);
     }
 
     
     NSDictionary* params = @{@"variables": variables,
                              @"classname":className,
                              @"menuitem_callbacks":menuitem_callbacks,
+                             @"controlbutton_callbacks":controlbutton_callbacks,
                              @"ccbname":ccbname,
                              @"baseclass":baseClass,
                              @"jsController":jsController,
@@ -152,6 +158,11 @@
             {
                 NSString* callback = [value objectAtIndex:0];
                 [resultObjectDict setObject:callback forKey:@"callback"];
+            }
+            if ([type isEqualToString:@"BlockCCControl"])
+            {
+                NSString* callback = [value objectAtIndex:0];
+                [resultObjectDict setObject:callback forKey:@"cccontrol_callback"];
             }
         }
         
